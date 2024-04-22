@@ -63,31 +63,22 @@ VALUES ('Participation', 0.05, 5);
 -- Add students
 INSERT INTO Student (Username, Name)
 VALUES ('jsmith123', 'John Smith');
-
 INSERT INTO Student (Username, Name)
 VALUES ('bmiller09', 'Jane Miller');
-
 INSERT INTO Student (Username, Name)
 VALUES ('alireza', 'Ali Reza');
-
 INSERT INTO Student (Username, Name)
 VALUES ('sbarlow', 'Sam Barlow');
-
 INSERT INTO Student (Username, Name)
 VALUES ('eramsey', 'Elliot Ramsey');
-
 INSERT INTO Student (Username, Name)
 VALUES ('gnelson02', 'Gianna Nelson');
-
 INSERT INTO Student (Username, Name)
 VALUES ('ksieves', 'Kenna Sieves');
-
 INSERT INTO Student (Username, Name)
 VALUES ('nwelch313', 'Natalie Welch');
-
 INSERT INTO Student (Username, Name)
 VALUES ('tjanson', 'Thomas Janson');
-
 INSERT INTO Student (Username, Name)
 VALUES ('cbrooks', 'Charlie Brooks');
 
@@ -149,6 +140,50 @@ INSERT INTO Enrollment (Student_ID, Course_ID)
 VALUES (9, 5);
 INSERT INTO Enrollment (Student_ID, Course_ID)
 VALUES (10, 5);
+
+--- Assignments
+INSERT INTO Assignment (Name, Description, Points_Possible, Due_Date, Category_Name, Course_ID)
+VALUES ('Homework 1', 'ER Models', 60, '2024-01-26', 'Homework', 1); -- CS410 Sp24
+INSERT INTO Assignment (Name, Description, Points_Possible, Due_Date, Category_Name, Course_ID)
+VALUES ('Homework 2', 'SQL Schemas and Queries', 80, '2024-02-16', 'Homework', 1);
+INSERT INTO Assignment (Name, Description, Points_Possible, Due_Date, Category_Name, Course_ID)
+VALUES ('Homework 3', 'Anomalies', 70, '2024-04-05', 'Homework', 1);
+INSERT INTO Assignment (Name, Description, Points_Possible, Due_Date, Category_Name, Course_ID)
+VALUES ('Midterm', 'Midterm', 90, '2024-03-06', 'Exam', 1); 
+INSERT INTO Assignment (Name, Description, Points_Possible, Due_Date, Category_Name, Course_ID)
+VALUES ('Final Project', 'DB Design', 100, '2024-04-30', 'Project', 1);
+INSERT INTO Assignment (Name, Description, Points_Possible, Due_Date, Category_Name, Course_ID)
+VALUES ('Final Exam', 'Final Exam', 120, '2024-05-01', 'Exam', 1);
+
+
+INSERT INTO Assignment (Name, Description, Points_Possible, Due_Date, Category_Name, Course_ID)
+VALUES ('Assignment 1', 'Derivatives as Limits', 20, '2024-01-08', 'Homework', 2); -- MATH201 Sp24
+INSERT INTO Assignment (Name, Description, Points_Possible, Due_Date, Category_Name, Course_ID)
+VALUES ('Assignment 2', 'Basic Derivative Rules', 20, '2024-01-15', 'Homework', 2); 
+INSERT INTO Assignment (Name, Description, Points_Possible, Due_Date, Category_Name, Course_ID)
+VALUES ('Assignment 3', 'Derivatives of Complex Functions', 20, '2024-01-22', 'Homework', 2); 
+INSERT INTO Assignment (Name, Description, Points_Possible, Due_Date, Category_Name, Course_ID)
+VALUES ('Quiz 1', 'Derivatives, Limits, and Tangent Lines', 10, '2024-15-17', 'Quiz', 2); 
+
+
+INSERT INTO Assignment (Name, Description, Points_Possible, Due_Date, Category_Name, Course_ID)
+VALUES ('Introduce Yourself', 'Create a brief introduction video about yourself.', 5, '2024-01-08', 'Classwork', 3); -- ENGL101 Sp24 1
+INSERT INTO Assignment (Name, Description, Points_Possible, Due_Date, Category_Name, Course_ID)
+VALUES ('Personal Essay: Introduce Yourself', 'Write a detailed personal essay introducing yourself.', 45, '2024-01-16', 'Essay', 3);
+
+INSERT INTO Assignment (Name, Description, Points_Possible, Due_Date, Category_Name, Course_ID)
+VALUES ('Introduce Yourself', 'Create a brief introduction video about yourself.', 5, '2024-01-08', 'Classwork', 4); -- ENGL101 Sp24 2
+INSERT INTO Assignment (Name, Description, Points_Possible, Due_Date, Category_Name, Course_ID)
+VALUES ('Personal Essay: Introduce Yourself', 'Write a detailed personal essay introducing yourself.', 45, '2024-01-16', 'Essay', 4);
+
+INSERT INTO Assignment (Name, Description, Points_Possible, Due_Date, Category_Name, Course_ID)
+VALUES ('Lab 01', 'Human Anatomy', 50, '2024-01-15', 'Lab', 5); -- BIOL104 Sp24 1
+INSERT INTO Assignment (Name, Description, Points_Possible, Due_Date, Category_Name, Course_ID)
+VALUES ('Homework 01', 'Genes', 40, '2024-01-20', 'Homework', 5);
+INSERT INTO Assignment (Name, Description, Points_Possible, Due_Date, Category_Name, Course_ID)
+VALUES ('Homework 02', 'Study of the Cell Structure', 60, '2024-02-03', 'Homework', 5); 
+INSERT INTO Assignment (Name, Description, Points_Possible, Due_Date, Category_Name, Course_ID)
+VALUES ('Midterm', 'BIOL104 Midterm', 100, '2024-02-22', 'Exam', 5);
 
 
 Show tables;
