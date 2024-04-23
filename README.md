@@ -15,6 +15,6 @@ java -cp ":mysql-connector-java-8.0.30.jar" Main.java <port> <username> <passwor
 Try using\
 port : 50565\
 username : msandbox\
-password : akarro17\
+password : akarro17
 
-as an example.\
+as an example.
