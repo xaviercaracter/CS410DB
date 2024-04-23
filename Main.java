@@ -2,6 +2,9 @@
 
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class Main {
 
@@ -150,7 +153,27 @@ public class Main {
         return false;
     }
 
+    // Run with 
+    //java -cp "mysql-connector-java-8.0.30.jar" Main.java <port-number> <username> <password>
     public static void main(String[] args) {
+        // check for valid arguments
+        if (args.length != 3) {
+            System.err.println("Invalid number of arguments. Syntax:");
+            System.err.println("java -cp \"mysql-connector-java-8.0.30.jar\" Main.java <port-number> <username> <password>");
+            return;
+        }
+        
+        // test a connection
+        DatabaseConnector dbc = new DatabaseConnector();
+        Connection connection = dbc.connect(args[0], args[1], args[2]);
+        
+        if (connection != null) {
+             System.out.println("Database connection successful!.");
+        } else {
+             System.out.println("Database connection failed.");
+             return;
+        }
+        
         // open a new input scanner
         Scanner sc = new Scanner(System.in);
         boolean quit = false;
