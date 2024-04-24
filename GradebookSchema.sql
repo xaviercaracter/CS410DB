@@ -1,10 +1,10 @@
 create database testgradebook;
 use testgradebook;
-show tables;
+  -- show tables; 
 
 -- Class
 CREATE TABLE Class (
-  Course_ID INTEGER PRIMARY KEY AUTO INCREMENT -- Unique identifier for course
+  Course_ID INTEGER PRIMARY KEY AUTO_INCREMENT, -- Unique identifier for course
   Course_Number VARCHAR(10) NOT NULL,  -- Course Title/Number 
   Term VARCHAR(10) NOT NULL,              -- Term class is offered
   Section_Number INT,                     -- Section number
@@ -14,11 +14,12 @@ CREATE TABLE Class (
 
 -- Category
 CREATE TABLE Category (
-  Category_Name VARCHAR(50) PRIMARY KEY,  -- Name for the category
-  Weight DECIMAL(5,2) NOT NULL,             -- Weight for the Class
-  CONSTRAINT chk_weight CHECK (Weight BETWEEN 0 AND 100), -- Enforce weight between 0 and 100
+  Category_Name VARCHAR(50),  -- Name for the category
+  Weight DECIMAL(5,2) NOT NULL,  -- Weight for the Class
+  CONSTRAINT chk_weight CHECK (Weight BETWEEN 0 AND 100),  -- Enforce weight between 0 and 100
   Course_ID INTEGER NOT NULL,  -- References the Class table
-  FOREIGN KEY (Course_ID) REFERENCES Class(Course_ID)
+  FOREIGN KEY (Course_ID) REFERENCES Class(Course_ID),
+  PRIMARY KEY (Category_Name, Course_ID)  -- Composite primary key
 );
 
 -- Assignment
@@ -29,7 +30,7 @@ CREATE TABLE Assignment (
   Points_Possible INT NOT NULL,                    -- Total num of points achievable
   Due_Date DATE,                                   -- Due date of the assignment
   Category_Name VARCHAR(50) NOT NULL,             -- Name of the category
-  Course_ID VARCHAR(10) NOT NULL,              -- Course number 
+  Course_ID INTEGER NOT NULL,              -- Course number 
   FOREIGN KEY (Category_Name) REFERENCES Category(Category_Name),
   FOREIGN KEY (Course_ID) REFERENCES Class(Course_ID),
   UNIQUE (Name, Course_ID)  -- Unique assignment names within a class
