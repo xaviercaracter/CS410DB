@@ -46,9 +46,11 @@ public class Main {
     }
 
     // returns a boolean whether to exit the main shell loop
-    public static boolean parseCommand(String command, ArrayList<String> args) {
+    public static boolean parseCommand(String command, ArrayList<String> args, DatabaseConnector dbc) {
         System.out.println("Command: " + command); // to test
         int num_args = args.size();
+        String query = "";  // query buffer
+        
         switch (command) {
         // quit the command loop
         case "quit":
@@ -68,7 +70,13 @@ public class Main {
 
         case "list-classes":
             if (num_args == 0) {
-                // do something here
+                query += "SELECT c.Course_ID, c.Term, c.Section_Number, c.Description, COUNT(e.Student_ID) AS Enrolled_Students\n";
+                query += "FROM Class c\n";
+                query += "LEFT JOIN Enrollment e ON c.Course_ID = e.Course_ID\n";
+                query += "GROUP BY c.Course_ID, c.Term, c.Section_Number, c.Description\n";
+                query += "ORDER BY c.Course_ID, c.Term, c.Section_Number;";
+                String result = dbc.executeSqlCommand(query);
+                System.out.println(result);
             }
             else System.err.println(command + " takes no arguments.");
             break;
@@ -153,26 +161,60 @@ public class Main {
         return false;
     }
 
+
+
+    // Helpful command line usage (when running the main program)
+    public static void CommandLineArgUsage() {
+        System.out.println("-----------------------------------");
+        System.err.println("Invalid number of arguments. Syntax:");
+        System.err.println("java -cp \"mysql-connector-java-8.0.30.jar\" Main.java <port-number> <username> <password>");
+        System.err.println("java -cp \"mysql-connector-java-8.0.30.jar\" Main.java <port-number> <username> <password> -d");
+        System.err.println("Optional : -d deletes the database once connection is successful");
+        System.out.println("-----------------------------------");
+    }
+
     // Run with 
     //java -cp "mysql-connector-java-8.0.30.jar" Main.java <port-number> <username> <password>
+    //or
+    //java -cp "mysql-connector-java-8.0.30.jar" Main.java <port-number> <username> <password> -d
+    //
+    //Note : -d deletes the current database before re-creating it
     public static void main(String[] args) {
         // check for valid arguments
-        if (args.length != 3) {
-            System.err.println("Invalid number of arguments. Syntax:");
-            System.err.println("java -cp \"mysql-connector-java-8.0.30.jar\" Main.java <port-number> <username> <password>");
+        if (args.length != 3 && args.length != 4) {
+            CommandLineArgUsage();
             return;
         }
+
+        boolean clear = false;
+
+        if (args.length == 4) {
+            if (!args[3].equals("-d")) {
+              CommandLineArgUsage();
+              return;
+            }
+            clear = true;
+        }        
         
         // test a connection
         DatabaseConnector dbc = new DatabaseConnector();
-        Connection connection = dbc.connect(args[0], args[1], args[2]);
+        boolean connected = dbc.connect(args[0], args[1], args[2]);
         
-        if (connection != null) {
-             System.out.println("Database connection successful!.");
-        } else {
+        if (!connected) {
              System.out.println("Database connection failed.");
              return;
         }
+        System.out.println("Database connection successful!");
+
+        // clear the database if -d flag was set
+        if (clear) 
+          dbc.executeSqlCommand("DROP DATABASE IF EXISTS testgradebook;");
+        
+        dbc.executeSqlFile("GradebookSchema.sql");  
+        
+        dbc.executeSqlFile("dump.sql");      
+        
+        //dbc.clean();
         
         // open a new input scanner
         Scanner sc = new Scanner(System.in);
@@ -192,7 +234,7 @@ public class Main {
             for (int i = 1; i < tokens.length; i++) {
                 c_args.add(tokens[i]);
             }
-            quit = parseCommand(tokens[0], c_args);
+            quit = parseCommand(tokens[0], c_args, dbc);
         }
         // close the scanner
         sc.close();

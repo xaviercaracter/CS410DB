@@ -163,7 +163,7 @@ VALUES ('Assignment 2', 'Basic Derivative Rules', 20, '2024-01-15', 'Homework', 
 INSERT INTO Assignment (Name, Description, Points_Possible, Due_Date, Category_Name, Course_ID)
 VALUES ('Assignment 3', 'Derivatives of Complex Functions', 20, '2024-01-22', 'Homework', 2); 
 INSERT INTO Assignment (Name, Description, Points_Possible, Due_Date, Category_Name, Course_ID)
-VALUES ('Quiz 1', 'Derivatives, Limits, and Tangent Lines', 10, '2024-15-17', 'Quiz', 2); 
+VALUES ('Quiz 1', 'Derivatives, Limits, and Tangent Lines', 10, '2024-01-17', 'Quiz', 2); 
 
 
 INSERT INTO Assignment (Name, Description, Points_Possible, Due_Date, Category_Name, Course_ID)
