@@ -175,6 +175,10 @@ public class Main {
 
     // Run with 
     //java -cp "mysql-connector-java-8.0.30.jar" Main.java <port-number> <username> <password>
+    //or
+    //java -cp "mysql-connector-java-8.0.30.jar" Main.java <port-number> <username> <password> -d
+    //
+    //Note : -d deletes the current database before re-creating it
     public static void main(String[] args) {
         // check for valid arguments
         if (args.length != 3 && args.length != 4) {
