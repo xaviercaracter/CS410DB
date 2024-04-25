@@ -132,7 +132,7 @@ public class Main {
                 System.out.println(lines[0]); // Print the selected class details
                 activeClass = lines[0]; // Set the active class
     
-                // Extract course ID from class details (assuming tab-separated values)
+                // Extract course ID from class details
                 String[] classDetails = lines[0].split("\t");
                 if (classDetails.length >= 1) {
                     String courseID = classDetails[0];
@@ -149,7 +149,7 @@ public class Main {
             String course = args.get(0);
             String term = args.get(1);
     
-            // Build the SQL query to select the class based on provided criteria
+            // Build the SQL query to select the class
             query += "SELECT Course_ID, Course_Number, Term, Section_Number, Description\n";
             query += "FROM Class\n";
             query += "WHERE Course_Number = '" + course + "'";
@@ -164,7 +164,7 @@ public class Main {
                 System.out.println(lines[0]); // Print the selected class details
                 activeClass = lines[0]; // Set the active class
     
-                // Extract course ID from class details (assuming tab-separated values)
+                // Extract course ID from class details
                 String[] classDetails = lines[0].split("\t");
                 if (classDetails.length >= 1) {
                     String courseID = classDetails[0];
@@ -189,7 +189,7 @@ public class Main {
                 return false;
             }
     
-            // Build the SQL query to select the class based on provided criteria
+            // Build the SQL query to select the class
             query += "SELECT Course_ID, Course_Number, Term, Section_Number, Description\n";
             query += "FROM Class\n";
             query += "WHERE Course_Number = '" + course + "'";
@@ -204,7 +204,7 @@ public class Main {
                 System.out.println(lines[0]); // Print the selected class details
                 activeClass = lines[0]; // Set the active class
     
-                // Extract course ID from class details (assuming tab-separated values)
+                // Extract course ID from class details
                 String[] classDetails = lines[0].split("\t");
                 if (classDetails.length >= 1) {
                     String courseID = classDetails[0];
