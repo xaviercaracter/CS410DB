@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Main {
+    private static String activeClass;
 
     public static void Usage() {
         System.out.println("Command line Usage:");
@@ -16,7 +17,7 @@ public class Main {
         System.out.println();
         System.out.println("help: Print this help message.");
         System.out.println("new-class <Course> <Semester> <Section> <ClassName>: Create a new class with the specified course," 
-        + "\n semester, section number, and class name.");
+        + "\n semester, section number, and class name. \n Example: new-class CS410 Sp20 1 Databases");
         System.out.println("list-classes: List all classes, with the number of enrolled students for each.");
         System.out.println("select-class <Course> *<Semester> *<Section>: Select and activate a class. If only course is specified," 
         + "\n selects the most recent term's section. If multiple sections are found, it fails without semester and section.");
@@ -63,34 +64,118 @@ public class Main {
 
         case "new-class":
             if (num_args == 4) {
-                // do something here
-            }
+                if (num_args == 4) {
+                    String courseNumber = args.get(0);
+                    String term = args.get(1);
+                    int sectionNumber = Integer.parseInt(args.get(2));
+                    String description = args.get(3);
+                    String insertQuery = String.format("INSERT INTO Class (Course_Number, Term, Section_Number, Description) " +
+                                                       "VALUES ('%s', '%s', %d, '%s')", courseNumber, term, sectionNumber, description);
+                    dbc.executeSqlCommand(insertQuery);
+                    System.out.println("New class added successfully.");
+                }
             else System.err.println(command + " requires 4 arguments: <Course> <Semester> <Section> <ClassName>.");
+            }   
             break;
+
 
         case "list-classes":
             if (num_args == 0) {
-                query += "SELECT c.Course_ID, c.Term, c.Section_Number, c.Description, COUNT(e.Student_ID) AS Enrolled_Students\n";
+                query += "SELECT c.Course_Number, c.Term, c.Section_Number, c.Description, COUNT(e.Student_ID) AS Enrolled_Students\n";
                 query += "FROM Class c\n";
                 query += "LEFT JOIN Enrollment e ON c.Course_ID = e.Course_ID\n";
-                query += "GROUP BY c.Course_ID, c.Term, c.Section_Number, c.Description\n";
-                query += "ORDER BY c.Course_ID, c.Term, c.Section_Number;";
+                query += "GROUP BY c.Course_Number, c.Term, c.Section_Number, c.Description\n";
+                query += "ORDER BY c.Course_Number;";
                 String result = dbc.executeSqlCommand(query);
-                System.out.println(result);
+                // Split the result into lines
+                String[] lines = result.split("\n");
+
+                // Print the header row
+                System.out.println("CNumb\tTerm\tSectNumb\tDesc\tStudents");
+        
+                // Print each line in a tabular format
+                for (String line : lines) {
+                    // Skip empty lines
+                    if (!line.trim().isEmpty()) {
+                        String[] columns = line.split("\t");
+                        for (int i = 0; i < columns.length; i++) {
+                            // Adjust the output to fit within the header length
+                            String column = columns[i];
+                            if (i == 3) { // Description column
+                                System.out.print(column + "\t"); // Print the full description
+                            } else if (i == 4) { // Enrolled Students column
+                                System.out.print(column.substring(0, Math.min(column.length(), 8)) + "\t"); // Fit "Students" into the header
+                            } else {
+                                System.out.print(column + "\t");
+                            }
+                        }
+                        System.out.println(); // Move to the next line
+                    }
+                }
             }
             else System.err.println(command + " takes no arguments.");
             break;
 
         case "select-class":
-            if (num_args > 0 && num_args <= 3) {
-                // do something here
+        if (num_args >= 1 && num_args <= 3) {
+            String course = args.get(0);
+            String semester = null;
+            int section = -1;
+    
+            if (num_args >= 2) {
+                semester = args.get(1);
             }
-            else System.err.println(command + " requires 1 to 3 arguments: <Course> *<Semester> *<Section>.");
+            if (num_args == 3) {
+                try {
+                    section = Integer.parseInt(args.get(2));
+                } catch (NumberFormatException e) {
+                    System.err.println("Invalid section number.");
+                    return false;
+                }
+            }
+    
+            // Build the SQL query to select the class based on provided criteria
+            query += "SELECT Course_Number, Term, Section_Number, Description\n";
+            query += "FROM Class\n";
+            query += "WHERE Course_Number = '" + course + "'";
+    
+            if (semester != null) {
+                query += " AND Term = '" + semester + "'";
+            }
+    
+            if (section != -1) {
+                query += " AND Section_Number = " + section;
+            }
+    
+            query += " ORDER BY Term DESC, Section_Number ASC LIMIT 1;"; // Get the most recent term and specific section if provided
+    
+            String result = dbc.executeSqlCommand(query);
+    
+            // Process the result to check for multiple sections
+            String[] lines = result.split("\n");
+    
+            if (lines.length > 1) {
+                System.err.println("Error: Multiple sections found for the selected criteria.");
+            } else if (lines.length == 0) {
+                System.err.println("Error: No matching class found for the selected criteria.");
+            } else {
+                System.out.println("Selected class:");
+                System.out.println(lines[0]); // Print the selected class details
+                activeClass = lines[0]; // Set the active class
+            }
+        } else {
+            System.err.println(command + " requires 1 to 3 arguments: <Course> *<Semester> *<Section>.");
+        }
             break;
 
         case "show-class":
             if (num_args == 0) {
-                // do something here
+                // Display the current active class, if set
+                if (activeClass != null) {
+                    System.out.println("Currently active class: " + activeClass);
+                } else {
+                    System.err.println("No class is currently selected.");
+                }
             }
             else System.err.println(command + " takes no arguments.");
             break;
@@ -180,6 +265,10 @@ public class Main {
     //
     //Note : -d deletes the current database before re-creating it
     public static void main(String[] args) {
+        //Initialize the active class to null
+        activeClass = null;
+
+
         // check for valid arguments
         if (args.length != 3 && args.length != 4) {
             CommandLineArgUsage();
@@ -208,11 +297,15 @@ public class Main {
 
         // clear the database if -d flag was set
         if (clear) 
-          dbc.executeSqlCommand("DROP DATABASE IF EXISTS testgradebook;");
+            dbc.executeSqlCommand("DROP DATABASE IF EXISTS Gradebook;");
+
         
-        dbc.executeSqlFile("GradebookSchema.sql");  
+        dbc.executeSqlFile("Schema.sql");
+        //dbc.executeSqlCommand("Use Gradebook;");
+       
+        //dbc.executeSqlFile("GradebookSchema.sql");  
         
-        dbc.executeSqlFile("dump.sql");      
+        //dbc.executeSqlFile("dump.sql");      
         
         //dbc.clean();
         
