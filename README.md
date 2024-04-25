@@ -6,7 +6,7 @@ javac -cp "." DatabaseConnector.java Main.java
 
 java -cp ":mysql-connector-java-8.0.30.jar" Main.java <port> <username> <password>
 or
-java -cp ":mysql-connector-java-8.0.30.jar" Main.java <port> <username> <password>
+java -cp ":mysql-connector-java-8.0.30.jar" Main.java <port> <username> <password> -d
 
 Use this java command for Windows (javac command remains the same):
 
