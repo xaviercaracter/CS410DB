@@ -117,51 +117,107 @@ public class Main {
             break;
 
         case "select-class":
-        if (num_args >= 1 && num_args <= 3) {
+        if (num_args == 1) {
             String course = args.get(0);
-            String semester = null;
-            int section = -1;
     
-            if (num_args >= 2) {
-                semester = args.get(1);
-            }
-            if (num_args == 3) {
-                try {
-                    section = Integer.parseInt(args.get(2));
-                } catch (NumberFormatException e) {
-                    System.err.println("Invalid section number.");
-                    return false;
-                }
-            }
-    
-            // Build the SQL query to select the class based on provided criteria
-            query += "SELECT Course_Number, Term, Section_Number, Description\n";
+            // Build the SQL query to select the class
+            query += "SELECT Course_ID, Course_Number, Term, Section_Number, Description\n";
             query += "FROM Class\n";
             query += "WHERE Course_Number = '" + course + "'";
-    
-            if (semester != null) {
-                query += " AND Term = '" + semester + "'";
-            }
-    
-            if (section != -1) {
-                query += " AND Section_Number = " + section;
-            }
-    
-            query += " ORDER BY Term DESC, Section_Number ASC LIMIT 1;"; // Get the most recent term and specific section if provided
+            query += " ORDER BY Term DESC, Section_Number ASC;";
     
             String result = dbc.executeSqlCommand(query);
-    
-            // Process the result to check for multiple sections
             String[] lines = result.split("\n");
     
-            if (lines.length > 1) {
-                System.err.println("Error: Multiple sections found for the selected criteria.");
-            } else if (lines.length == 0) {
-                System.err.println("Error: No matching class found for the selected criteria.");
-            } else {
+            if (lines.length == 1) {
                 System.out.println("Selected class:");
                 System.out.println(lines[0]); // Print the selected class details
                 activeClass = lines[0]; // Set the active class
+    
+                // Extract course ID from class details (assuming tab-separated values)
+                String[] classDetails = lines[0].split("\t");
+                if (classDetails.length >= 1) {
+                    String courseID = classDetails[0];
+                    System.out.println("Course ID: " + courseID);
+                } else {
+                    System.err.println("Error parsing class details.");
+                }
+            } else if (lines.length > 1) {
+                System.err.println("Error: Multiple sections found for the selected course.");
+            } else {
+                System.err.println("Error: No matching class found for the selected course.");
+            }
+        } else if (num_args == 2) {
+            String course = args.get(0);
+            String term = args.get(1);
+    
+            // Build the SQL query to select the class based on provided criteria
+            query += "SELECT Course_ID, Course_Number, Term, Section_Number, Description\n";
+            query += "FROM Class\n";
+            query += "WHERE Course_Number = '" + course + "'";
+            query += " AND Term = '" + term + "'";
+            query += " ORDER BY Section_Number ASC;";
+    
+            String result = dbc.executeSqlCommand(query);
+            String[] lines = result.split("\n");
+    
+            if (lines.length == 1) {
+                System.out.println("Selected class:");
+                System.out.println(lines[0]); // Print the selected class details
+                activeClass = lines[0]; // Set the active class
+    
+                // Extract course ID from class details (assuming tab-separated values)
+                String[] classDetails = lines[0].split("\t");
+                if (classDetails.length >= 1) {
+                    String courseID = classDetails[0];
+                    System.out.println("Course ID: " + courseID);
+                } else {
+                    System.err.println("Error parsing class details.");
+                }
+            } else if (lines.length > 1) {
+                System.err.println("Error: Multiple sections found for the selected course and term.");
+            } else {
+                System.err.println("Error: No matching class found for the selected course and term.");
+            }
+        } else if (num_args == 3) {
+            String course = args.get(0);
+            String term = args.get(1);
+            int section = -1;
+    
+            try {
+                section = Integer.parseInt(args.get(2));
+            } catch (NumberFormatException e) {
+                System.err.println("Invalid section number.");
+                return false;
+            }
+    
+            // Build the SQL query to select the class based on provided criteria
+            query += "SELECT Course_ID, Course_Number, Term, Section_Number, Description\n";
+            query += "FROM Class\n";
+            query += "WHERE Course_Number = '" + course + "'";
+            query += " AND Term = '" + term + "'";
+            query += " AND Section_Number = " + section + ";";
+    
+            String result = dbc.executeSqlCommand(query);
+            String[] lines = result.split("\n");
+    
+            if (lines.length == 1) {
+                System.out.println("Selected class:");
+                System.out.println(lines[0]); // Print the selected class details
+                activeClass = lines[0]; // Set the active class
+    
+                // Extract course ID from class details (assuming tab-separated values)
+                String[] classDetails = lines[0].split("\t");
+                if (classDetails.length >= 1) {
+                    String courseID = classDetails[0];
+                    System.out.println("Course ID: " + courseID);
+                } else {
+                    System.err.println("Error parsing class details.");
+                }
+            } else if (lines.length == 0) {
+                System.err.println("Error: No matching class found for the selected course, term, and section.");
+            } else {
+                System.err.println("Error: Multiple sections found for the selected course, term, and section.");
             }
         } else {
             System.err.println(command + " requires 1 to 3 arguments: <Course> *<Semester> *<Section>.");
