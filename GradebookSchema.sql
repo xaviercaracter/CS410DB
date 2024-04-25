@@ -1,9 +1,9 @@
-create database testgradebook;
+create database if not exists testgradebook;
 use testgradebook;
   -- show tables; 
 
 -- Class
-CREATE TABLE Class (
+CREATE TABLE IF NOT EXISTS Class (
   Course_ID INTEGER PRIMARY KEY AUTO_INCREMENT, -- Unique identifier for course
   Course_Number VARCHAR(10) NOT NULL,  -- Course Title/Number 
   Term VARCHAR(10) NOT NULL,              -- Term class is offered
@@ -13,7 +13,7 @@ CREATE TABLE Class (
 );
 
 -- Category
-CREATE TABLE Category (
+CREATE TABLE IF NOT EXISTS Category (
   Category_Name VARCHAR(50),  -- Name for the category
   Weight DECIMAL(5,2) NOT NULL,  -- Weight for the Class
   CONSTRAINT chk_weight CHECK (Weight BETWEEN 0 AND 100),  -- Enforce weight between 0 and 100
@@ -23,7 +23,7 @@ CREATE TABLE Category (
 );
 
 -- Assignment
-CREATE TABLE Assignment (
+CREATE TABLE IF NOT EXISTS Assignment (
   Assignment_ID INT AUTO_INCREMENT PRIMARY KEY,  -- Auto-generated unique id
   Name VARCHAR(100) NOT NULL,                     -- Name of the assignment
   Description TEXT,                                -- Description of assignment
@@ -37,14 +37,14 @@ CREATE TABLE Assignment (
 );
 
 -- Student
-CREATE TABLE Student (
+CREATE TABLE IF NOT EXISTS Student (
   Student_ID INT AUTO_INCREMENT PRIMARY KEY,  -- ID for student
   Username VARCHAR(50) NOT NULL UNIQUE,       -- Username
   Name VARCHAR(255) NOT NULL                   -- Full name of the student
 );
 
 -- Enrollment
-CREATE TABLE Enrollment (
+CREATE TABLE IF NOT EXISTS Enrollment (
   Student_ID INT NOT NULL,
   Course_ID INTEGER NOT NULL,
   FOREIGN KEY (Student_ID) REFERENCES Student(Student_ID),
@@ -53,7 +53,7 @@ CREATE TABLE Enrollment (
 );
 
 -- Grade 
-CREATE TABLE Grade (
+CREATE TABLE IF NOT EXISTS Grade (
   Student_ID INT NOT NULL,
   Assignment_ID INT NOT NULL,
   Earned_Points INT NOT NULL,
@@ -63,9 +63,9 @@ CREATE TABLE Grade (
 );
 
 -- Indexes
-CREATE INDEX idx_class_term_section ON Class(Term, Section_Number);  -- Filtering by term and section index
-CREATE INDEX idx_assignment_category_course ON Assignment(Category_Name, Course_ID);  -- Faster retrieval based on category and course index
-CREATE INDEX idx_enrollment_student_id ON Enrollment(Student_ID);  -- Lookup by student index
-CREATE INDEX idx_enrollment_course_number ON Enrollment(Course_ID);  -- Lookup by course index 
-CREATE INDEX idx_grade_student_id ON Grade(Student_ID);  -- Retrieval of grades by student index
-CREATE INDEX idx_grade_assignment_id ON Grade(Assignment_ID);  -- Retrieval of grades by assignment index
+CREATE INDEX IF NOT EXISTS idx_class_term_section ON Class(Term, Section_Number);  -- Filtering by term and section index
+CREATE INDEX IF NOT EXISTS idx_assignment_category_course ON Assignment(Category_Name, Course_ID);  -- Faster retrieval based on category and course index
+CREATE INDEX IF NOT EXISTS idx_enrollment_student_id ON Enrollment(Student_ID);  -- Lookup by student index
+CREATE INDEX IF NOT EXISTS idx_enrollment_course_number ON Enrollment(Course_ID);  -- Lookup by course index 
+CREATE INDEX IF NOT EXISTS idx_grade_student_id ON Grade(Student_ID);  -- Retrieval of grades by student index
+CREATE INDEX IF NOT EXISTS idx_grade_assignment_id ON Grade(Assignment_ID);  -- Retrieval of grades by assignment index
