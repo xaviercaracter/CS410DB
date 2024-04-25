@@ -1,5 +1,3 @@
-// Main program to run command line loop
-
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.sql.Connection;
