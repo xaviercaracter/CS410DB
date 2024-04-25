@@ -62,7 +62,6 @@ public class Main {
 
         case "new-class":
             if (num_args == 4) {
-                if (num_args == 4) {
                     String courseNumber = args.get(0);
                     String term = args.get(1);
                     int sectionNumber = Integer.parseInt(args.get(2));
@@ -70,10 +69,9 @@ public class Main {
                     String insertQuery = String.format("INSERT INTO Class (Course_Number, Term, Section_Number, Description) " +
                                                        "VALUES ('%s', '%s', %d, '%s')", courseNumber, term, sectionNumber, description);
                     dbc.executeSqlCommand(insertQuery);
-                    System.out.println("New class added successfully.");
-                }
+                    System.out.println("New class added successfully.");          
+            }
             else System.err.println(command + " requires 4 arguments: <Course> <Semester> <Section> <ClassName>.");
-            }   
             break;
 
 
