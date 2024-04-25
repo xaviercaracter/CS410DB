@@ -23,3 +23,7 @@ username : msandbox\
 password : akarro17
 
 as an example.
+
+e.g.
+
+java -cp ":mysql-connector-java-8.0.30.jar" Main.java 50565 msandbox akarro17
