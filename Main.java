@@ -28,7 +28,7 @@ public class Main {
         System.out.println("show-categories: List the assignment categories with their weights for the active class.");
         System.out.println("add-category <Name> <Weight>: Add a new assignment category with the given name and weight.");
         System.out.println("show-assignment: List the assignments with their point values, grouped by category.");
-        System.out.println("add-assignment <Name> <Category> <Description>: Add a new assignment under a category with the provided name and description.");
+        System.out.println("add-assignment <Name> <Category> <Description> <Points>: Add a new assignment under a category with the provided name and description and points.");
         System.out.println();
         System.out.println("Student Management:");
         System.out.println("add-student <Username> <StudentID> <Last> <First>: Add a student and enroll them in the active class." 
@@ -69,9 +69,9 @@ public class Main {
                     String term = args.get(1);
                     int sectionNumber = Integer.parseInt(args.get(2));
                     String description = args.get(3);
-                    String insertQuery = String.format("INSERT INTO Class (Course_Number, Term, Section_Number, Description) " +
+                    query = String.format("INSERT INTO Class (Course_Number, Term, Section_Number, Description) " +
                                                        "VALUES ('%s', '%s', %d, '%s')", courseNumber, term, sectionNumber, description);
-                    dbc.executeSqlCommand(insertQuery);
+                    dbc.executeSqlCommand(query);
                     System.out.println("New class added successfully.");          
             }
             else System.err.println(command + " requires 4 arguments: <Course> <Semester> <Section> <ClassName>.");
@@ -231,9 +231,7 @@ public class Main {
                 // Display the current active class, if set
                 if (activeClass != null) {
                     System.out.println("Currently active class: " + activeClass);
-                } else {
-                    System.err.println("No class is currently selected.");
-                }
+                } else System.err.println("No class is currently selected.");
             }
             else System.err.println(command + " takes no arguments.");
             break;
@@ -248,11 +246,10 @@ public class Main {
                     query += "WHERE Course_ID = '" + activeClass_pk + "';";
                     // execute the query
                     String result = dbc.executeSqlCommand(query);
-                    System.out.println("CName\tWeight\tCourseID");
+                    System.out.println("Categories:");
+                    System.out.println("Name\tWeight\tCourseID");
                     System.out.println(result);
-                } else {
-                    System.err.println("No class is currently selected.");
-                }
+                } else System.err.println("No class is currently selected.");
             }
             else System.err.println(command + " takes no arguments.");
             break;
@@ -262,30 +259,56 @@ public class Main {
                 if (activeClass_pk != -1) {
                     String cat_name = args.get(0);
                     double weight = Double.parseDouble(args.get(1));
-                    String insertQuery = String.format("INSERT INTO Category (Category_Name, Weight, Course_ID) " + 
+                    query = String.format("INSERT INTO Category (Category_Name, Weight, Course_ID) " + 
                                                        "VALUES ('%s', '%.2f', '%d')", cat_name, weight, activeClass_pk);
-                    dbc.executeSqlCommand(insertQuery);
+                    dbc.executeSqlCommand(query);
                     System.out.println("New category added successfully."); 
-                } else {
-                    System.err.println("No class is currently selected.");
-                }
-                
+                } else System.err.println("No class is currently selected.");
             }
             else System.err.println(command + " requires 2 arguments: <Name> <Weight>.");
             break;
 
         case "show-assignment":
             if (num_args == 0) {
-                // do something here
+                if (activeClass_pk != -1) {
+                    // show assignments with point values sorted (or grouped) into categories
+                    query += "SELECT Name, Points_Possible, Category_ID\n";  
+                    query += "FROM Assignment\n";
+                    query += "WHERE Course_ID = " + activeClass_pk + "\n";
+                    query += "ORDER BY Category_ID;";
+                    String result = dbc.executeSqlCommand(query);
+                    System.out.println("Assignments:");
+                    System.out.println("Name\tPoints\tCategoryID");
+                    System.out.println(result);
+                }
+                else System.err.println("No class is currently selected.");
             }
             else System.err.println(command + " takes no arguments.");
             break;
 
         case "add-assignment":
-            if (num_args == 3) {
-                // do something here
+            if (num_args == 4) {
+                if (activeClass_pk != -1) {
+                    String name = args.get(0);
+                    String category = args.get(1);
+                    String desc = args.get(2);
+                    double points_poss = Double.parseDouble(args.get(3));
+                    
+                    // get category ID
+                    query = "SELECT Category_ID FROM Category WHERE Category_Name = '" + category + "' AND Course_ID = " + activeClass_pk;
+                    String result = dbc.executeSqlCommand(query);
+                    int cat_id = Integer.parseInt(result.trim());
+                    
+                    // reset query buffer
+                    query = "";
+                    query = String.format("INSERT INTO Assignment (Name, Description, Points_Possible, Category_ID, Course_ID) " + 
+                                                       "VALUES ('%s', '%s', '%.2f', '%d', '%d')", 
+                                                       name, desc, points_poss, cat_id, activeClass_pk);
+                    dbc.executeSqlCommand(query);
+                    System.out.println("New assignment added successfully."); 
+                } else System.err.println("No class is currently selected.");
             }
-            else System.err.println(command + " requires 3 arguments: <Name> <Category> <Description>.");
+            else System.err.println(command + " requires 4 arguments: <Name> <Category> <Description> <Points>.");
             break;
 
         case "add-student":
@@ -414,9 +437,9 @@ public class Main {
             for (int i = 1; i < tokens.size(); i++) {
                 String a = tokens.get(i);
                 // string begin/end string literal quotes
-                if (a.startsWith("\"") && a.endsWith("\"") && a.length() > 0) {
-                    a = a.substring(1, a.length() - 1);
-                }
+                //if (a.startsWith("\"") && a.endsWith("\"") && a.length() > 0) {
+                //    a = a.substring(1, a.length() - 1);
+                //}
                 c_args.add(a);
             }
             quit = parseCommand(tokens.get(0), c_args, dbc);
