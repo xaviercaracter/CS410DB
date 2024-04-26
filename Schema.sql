@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS Assignment (
   Assignment_ID INT AUTO_INCREMENT PRIMARY KEY,  -- Auto-generated unique id
   Name VARCHAR(100) NOT NULL,                     -- Name of the assignment
   Description TEXT,                                -- Description of assignment
-  Points_Possible INT NOT NULL,                    -- Total num of points achievable
+  Points_Possible DECIMAL NOT NULL,                -- Total num of points achievable
   Due_Date DATE,                                   -- Due date of the assignment
   Category_ID INT NOT NULL,                        -- References the Category ID
   Course_ID INT NOT NULL,                          -- References the Course ID
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS Grade (
   Grade_ID INT AUTO_INCREMENT PRIMARY KEY,  -- Unique grade ID
   Student_ID INT NOT NULL,
   Assignment_ID INT NOT NULL,
-  Earned_Points INT NOT NULL,
+  Earned_Points DECIMAL NOT NULL,
   FOREIGN KEY (Student_ID) REFERENCES Student(Student_ID),
   FOREIGN KEY (Assignment_ID) REFERENCES Assignment(Assignment_ID),
   UNIQUE (Student_ID, Assignment_ID)  -- Ensures a student has only one grade per assignment
