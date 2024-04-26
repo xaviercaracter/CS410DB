@@ -34,9 +34,10 @@ CREATE TABLE IF NOT EXISTS Assignment (
 
 -- Student
 CREATE TABLE IF NOT EXISTS Student (
-  Student_ID INT AUTO_INCREMENT PRIMARY KEY,  -- ID for student
-  Username VARCHAR(50) NOT NULL UNIQUE,       -- Username
-  Name VARCHAR(255) NOT NULL                   -- Full name of the student
+  Student_ID INT PRIMARY KEY,                 -- ID for student (primary key)
+  Username VARCHAR(50) NOT NULL UNIQUE,       -- Username (unique, not null)
+  Firstname VARCHAR(255) NOT NULL,            -- First name of the student (not null)
+  Lastname VARCHAR(255) NOT NULL              -- Last name of the student (not null)
 );
 
 CREATE TABLE IF NOT EXISTS Enrollment (
