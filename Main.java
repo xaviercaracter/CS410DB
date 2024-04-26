@@ -598,9 +598,9 @@ public class Main {
             for (int i = 1; i < tokens.size(); i++) {
                 String a = tokens.get(i);
                 // string begin/end string literal quotes
-                // if (a.startsWith("\"") && a.endsWith("\"") && a.length() > 0) {
-                // a = a.substring(1, a.length() - 1);
-                // }
+                 if (a.startsWith("\"") && a.endsWith("\"") && a.length() > 0) {
+                 a = a.substring(1, a.length() - 1);
+                 }
                 c_args.add(a);
             }
             quit = parseCommand(tokens.get(0), c_args, dbc);
