@@ -25,7 +25,6 @@ CREATE TABLE IF NOT EXISTS Assignment (
   Name VARCHAR(100) NOT NULL,                     -- Name of the assignment
   Description TEXT,                                -- Description of assignment
   Points_Possible DECIMAL NOT NULL,                -- Total num of points achievable
-  Due_Date DATE,                                   -- Due date of the assignment
   Category_ID INT NOT NULL,                        -- References the Category ID
   Course_ID INT NOT NULL,                          -- References the Course ID
   FOREIGN KEY (Category_ID) REFERENCES Category(Category_ID),
