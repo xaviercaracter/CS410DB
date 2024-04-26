@@ -22,6 +22,7 @@ java -cp ":mysql-connector-java-8.0.30.jar" Main.java <port> <username> <passwor
 Note: -d is an optional argument that tells the program to delete the current database (clean operation). It will then create a new copy of the database.
 
 Try using\
+
 port : 50565\
 username : msandbox\
 password : akarro17
@@ -31,3 +32,5 @@ as an example.
 e.g.
 
 java -cp ":mysql-connector-java-8.0.30.jar" Main.java 50565 msandbox akarro17
+
+(Works on BSU Onyx cluster only!) Otherwise, just set up your own connection
