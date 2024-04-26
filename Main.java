@@ -3,6 +3,8 @@ import java.util.ArrayList;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Main {
     private static String activeClass;
@@ -298,8 +300,6 @@ public class Main {
         return false;
     }
 
-
-
     // Helpful command line usage (when running the main program)
     public static void CommandLineArgUsage() {
         System.out.println("-----------------------------------");
@@ -310,7 +310,7 @@ public class Main {
         System.out.println("-----------------------------------");
     }
 
-    // Run with 
+     // Run with 
     //java -cp "mysql-connector-java-8.0.30.jar" Main.java <port-number> <username> <password>
     //or
     //java -cp "mysql-connector-java-8.0.30.jar" Main.java <port-number> <username> <password> -d
@@ -369,17 +369,31 @@ public class Main {
             System.out.print("\r> ");
             String line = sc.nextLine();
             // get tokens for each command and its arguments
-            String[] tokens = line.split("[ \\t]+");
+            
+            ArrayList<String> tokens = new ArrayList<String>();
+            Pattern pattern = Pattern.compile("\"[^\"]+\"|\\S+");
+            Matcher matcher = pattern.matcher(line);
+      
+            while (matcher.find()) {
+                tokens.add(matcher.group());
+            }
+
             // nothing to parse
-            if (line=="" || tokens.length==0) {
+            if (line=="" || tokens.size()==0) {
                 continue;             
             }
+
             // parse the command
             ArrayList<String> c_args = new ArrayList<String>();
-            for (int i = 1; i < tokens.length; i++) {
-                c_args.add(tokens[i]);
+            for (int i = 1; i < tokens.size(); i++) {
+                String a = tokens.get(i);
+                // string begin/end string literal quotes
+                if (a.startsWith("\"") && a.endsWith("\"") && a.length() > 0) {
+                    a = a.substring(1, a.length() - 1);
+                }
+                c_args.add(a);
             }
-            quit = parseCommand(tokens[0], c_args, dbc);
+            quit = parseCommand(tokens.get(0), c_args, dbc);
         }
         // close the scanner
         sc.close();
