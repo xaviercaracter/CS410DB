@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 
 public class Main {
     private static String activeClass;
+    private static int activeClass_pk;  // use this to keep track of the primary key for the course
 
     public static void Usage() {
         System.out.println("Command line Usage:");
@@ -131,11 +132,12 @@ public class Main {
                 System.out.println("Selected class:");
                 System.out.println(lines[0]); // Print the selected class details
                 activeClass = lines[0]; // Set the active class
-    
+
                 // Extract course ID from class details
                 String[] classDetails = lines[0].split("\t");
                 if (classDetails.length >= 1) {
                     String courseID = classDetails[0];
+                    activeClass_pk = Integer.parseInt(courseID); // set the primary key (for active class) to courseID
                     System.out.println("Course ID: " + courseID);
                 } else {
                     System.err.println("Error parsing class details.");
@@ -168,6 +170,7 @@ public class Main {
                 String[] classDetails = lines[0].split("\t");
                 if (classDetails.length >= 1) {
                     String courseID = classDetails[0];
+                    activeClass_pk = Integer.parseInt(courseID); // set the primary key (for active class) to courseID
                     System.out.println("Course ID: " + courseID);
                 } else {
                     System.err.println("Error parsing class details.");
@@ -208,6 +211,7 @@ public class Main {
                 String[] classDetails = lines[0].split("\t");
                 if (classDetails.length >= 1) {
                     String courseID = classDetails[0];
+                    activeClass_pk = Integer.parseInt(courseID); // set the primary key (for active class) to courseID
                     System.out.println("Course ID: " + courseID);
                 } else {
                     System.err.println("Error parsing class details.");
@@ -236,14 +240,36 @@ public class Main {
 
         case "show-categories":
             if (num_args == 0) {
-                // do something here
+                // check if there is an active class
+                if (activeClass_pk != -1) {
+                    // Build the query to show categories
+                    query += "SELECT Category_Name, Weight, Course_ID\n";
+                    query += "FROM Category\n";                   
+                    query += "WHERE Course_ID = '" + activeClass_pk + "';";
+                    // execute the query
+                    String result = dbc.executeSqlCommand(query);
+                    System.out.println("CName\tWeight\tCourseID");
+                    System.out.println(result);
+                } else {
+                    System.err.println("No class is currently selected.");
+                }
             }
             else System.err.println(command + " takes no arguments.");
             break;
 
         case "add-category":
             if (num_args == 2) {
-                // do something here
+                if (activeClass_pk != -1) {
+                    String cat_name = args.get(0);
+                    double weight = Double.parseDouble(args.get(1));
+                    String insertQuery = String.format("INSERT INTO Category (Category_Name, Weight, Course_ID) " + 
+                                                       "VALUES ('%s', '%.2f', '%d')", cat_name, weight, activeClass_pk);
+                    dbc.executeSqlCommand(insertQuery);
+                    System.out.println("New category added successfully."); 
+                } else {
+                    System.err.println("No class is currently selected.");
+                }
+                
             }
             else System.err.println(command + " requires 2 arguments: <Name> <Weight>.");
             break;
@@ -319,7 +345,7 @@ public class Main {
     public static void main(String[] args) {
         //Initialize the active class to null
         activeClass = null;
-
+        activeClass_pk = -1; // -1 isn't a valid primary key
 
         // check for valid arguments
         if (args.length != 3 && args.length != 4) {
