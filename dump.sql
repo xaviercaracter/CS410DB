@@ -89,3 +89,50 @@ VALUES ('Homework 1', 'ER Models', 60, 1, 1),
        ('Homework 02', 'Study of the Cell Structure', 60, 1, 5),
        ('Midterm', 'BIOL104 Midterm', 100, 2, 5);
 
+
+-- CS410 Sp24 Section 1 grades
+INSERT INTO Grade (Student_ID, Assignment_ID, Earned_Points)
+VALUES
+-- John Smith
+(1, 1, 55), -- Homework 1
+(1, 2, 75), -- Homework 2
+(1, 3, 65), -- Homework 3
+(1, 4, 85), -- Midterm
+(1, 5, 95), -- Final Project
+(1, 6, 110), -- Final Exam
+
+-- Jane Miller
+(2, 1, 50), -- Homework 1
+(2, 2, 70), -- Homework 2
+(2, 3, 60), -- Homework 3
+(2, 4, 80), -- Midterm
+(2, 5, 90), -- Final Project
+(2, 6, 105), -- Final Exam
+
+-- Sam Barlow
+(4, 1, 58), -- Homework 1
+(4, 2, 78), -- Homework 2
+(4, 3, 68), -- Homework 3
+(4, 4, 88), -- Midterm
+(4, 5, 98), -- Final Project
+(4, 6, 113), -- Final Exam
+
+-- Gianna Nelson
+(6, 1, 53), -- Homework 1
+(6, 2, 73), -- Homework 2
+(6, 3, 63), -- Homework 3
+(6, 4, 83), -- Midterm
+(6, 5, 93), -- Final Project
+(6, 6, 108), -- Final Exam
+
+-- Kenna Sieves
+(7, 1, 52), -- Homework 1
+(7, 2, 72), -- Homework 2
+(7, 3, 62), -- Homework 3
+(7, 4, 82), -- Midterm
+(7, 5, 92), -- Final Project
+(7, 6, 107); -- Final Exam
+
+
+
+
