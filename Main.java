@@ -657,9 +657,6 @@ public class Main {
             dbc.executeSqlCommand("DROP DATABASE IF EXISTS Gradebook;");
 
         dbc.executeSqlFile("Schema.sql");
-        // dbc.executeSqlCommand("Use Gradebook;");
-
-        // dbc.executeSqlFile("GradebookSchema.sql");
 
         dbc.executeSqlFile("dump.sql");
 
