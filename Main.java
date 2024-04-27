@@ -129,117 +129,135 @@ public class Main {
 
             case "select-class":
                 if (num_args == 1) {
-                    String course = args.get(0);
+                    try {
+                        String course = args.get(0);
 
-                    // Build the SQL query to select the class
-                    query += "SELECT Course_ID, Course_Number, Term, Section_Number, Description\n";
-                    query += "FROM Class\n";
-                    query += "WHERE Course_Number = '" + course + "'";
-                    query += " ORDER BY Term DESC, Section_Number ASC;";
+                        // Build the SQL query to select the class
+                        query += "SELECT Course_ID, Course_Number, Term, Section_Number, Description\n";
+                        query += "FROM Class\n";
+                        query += "WHERE Course_Number = '" + course + "'";
+                        query += " ORDER BY Term DESC, Section_Number ASC;";
 
-                    String result = dbc.executeSqlCommand(query);
-                    String[] lines = result.split("\n");
+                        String result = dbc.executeSqlCommand(query);
+                        String[] lines = result.split("\n");
 
-                    if (lines.length == 1) {
-                        System.out.println("Selected class:");
-                        System.out.println(lines[0]); // Print the selected class details
-                        activeClass = lines[0]; // Set the active class
+                        if (lines.length == 1) {
+                            System.out.println("Selected class:");
+                            System.out.println(lines[0]); // Print the selected class details
+                            activeClass = lines[0]; // Set the active class
 
-                        // Extract course ID from class details
-                        String[] classDetails = lines[0].split("\t");
-                        if (classDetails.length >= 1) {
-                            String courseID = classDetails[0];
-                            activeClass_pk = Integer.parseInt(courseID); // set the primary key (for active class) to
-                                                                         // courseID
-                            System.out.println("Course ID: " + courseID);
+                            // Extract course ID from class details
+                            String[] classDetails = lines[0].split("\t");
+                            if (classDetails.length >= 1) {
+                                String courseID = classDetails[0];
+                                activeClass_pk = Integer.parseInt(courseID); // set the primary key (for active class)
+                                                                             // to
+                                                                             // courseID
+                                System.out.println("Course ID: " + courseID);
+                            } else {
+                                System.err.println("Error parsing class details.");
+                            }
+                        } else if (lines.length > 1) {
+                            System.err.println("Error: Multiple sections found for the selected course.");
                         } else {
-                            System.err.println("Error parsing class details.");
+                            System.err.println("Error: No matching class found for the selected course.");
                         }
-                    } else if (lines.length > 1) {
-                        System.err.println("Error: Multiple sections found for the selected course.");
-                    } else {
-                        System.err.println("Error: No matching class found for the selected course.");
+                    } catch (Exception e) {
+                        System.err.println("Error processing input");
                     }
                 } else if (num_args == 2) {
-                    String course = args.get(0);
-                    String term = args.get(1);
+                    try {
+                        String course = args.get(0);
+                        String term = args.get(1);
 
-                    // Build the SQL query to select the class
-                    query += "SELECT Course_ID, Course_Number, Term, Section_Number, Description\n";
-                    query += "FROM Class\n";
-                    query += "WHERE Course_Number = '" + course + "'";
-                    query += " AND Term = '" + term + "'";
-                    query += " ORDER BY Section_Number ASC;";
+                        // Build the SQL query to select the class
+                        query += "SELECT Course_ID, Course_Number, Term, Section_Number, Description\n";
+                        query += "FROM Class\n";
+                        query += "WHERE Course_Number = '" + course + "'";
+                        query += " AND Term = '" + term + "'";
+                        query += " ORDER BY Section_Number ASC;";
 
-                    String result = dbc.executeSqlCommand(query);
-                    String[] lines = result.split("\n");
+                        String result = dbc.executeSqlCommand(query);
+                        String[] lines = result.split("\n");
 
-                    if (lines.length == 1) {
-                        System.out.println("Selected class:");
-                        System.out.println(lines[0]); // Print the selected class details
-                        activeClass = lines[0]; // Set the active class
+                        if (lines.length == 1) {
+                            System.out.println("Selected class:");
+                            System.out.println(lines[0]); // Print the selected class details
+                            activeClass = lines[0]; // Set the active class
 
-                        // Extract course ID from class details
-                        String[] classDetails = lines[0].split("\t");
-                        if (classDetails.length >= 1) {
-                            String courseID = classDetails[0];
-                            activeClass_pk = Integer.parseInt(courseID); // set the primary key (for active class) to
-                                                                         // courseID
-                            System.out.println("Course ID: " + courseID);
+                            // Extract course ID from class details
+                            String[] classDetails = lines[0].split("\t");
+                            if (classDetails.length >= 1) {
+                                String courseID = classDetails[0];
+                                activeClass_pk = Integer.parseInt(courseID); // set the primary key (for active class)
+                                                                             // to
+                                                                             // courseID
+                                System.out.println("Course ID: " + courseID);
+                            } else {
+                                System.err.println("Error parsing class details.");
+                            }
+                        } else if (lines.length > 1) {
+                            System.err.println("Error: Multiple sections found for the selected course and term.");
                         } else {
-                            System.err.println("Error parsing class details.");
+                            System.err.println("Error: No matching class found for the selected course and term.");
                         }
-                    } else if (lines.length > 1) {
-                        System.err.println("Error: Multiple sections found for the selected course and term.");
-                    } else {
-                        System.err.println("Error: No matching class found for the selected course and term.");
+                    } catch (Exception e) {
+                        System.err.println("Error processing input");
                     }
                 } else if (num_args == 3) {
-                    String course = args.get(0);
-                    String term = args.get(1);
-                    int section = -1;
-
                     try {
-                        section = Integer.parseInt(args.get(2));
-                    } catch (NumberFormatException e) {
-                        System.err.println("Invalid section number.");
-                        return false;
-                    }
+                        String course = args.get(0);
+                        String term = args.get(1);
+                        int section = -1;
 
-                    // Build the SQL query to select the class
-                    query += "SELECT Course_ID, Course_Number, Term, Section_Number, Description\n";
-                    query += "FROM Class\n";
-                    query += "WHERE Course_Number = '" + course + "'";
-                    query += " AND Term = '" + term + "'";
-                    query += " AND Section_Number = " + section + ";";
-
-                    String result = dbc.executeSqlCommand(query);
-                    String[] lines = result.split("\n");
-
-                    if (lines.length == 1) {
-                        System.out.println("Selected class:");
-                        System.out.println(lines[0]); // Print the selected class details
-                        activeClass = lines[0]; // Set the active class
-
-                        // Extract course ID from class details
-                        String[] classDetails = lines[0].split("\t");
-                        if (classDetails.length >= 1) {
-                            String courseID = classDetails[0];
-                            activeClass_pk = Integer.parseInt(courseID); // set the primary key (for active class) to
-                                                                         // courseID
-                            System.out.println("Course ID: " + courseID);
-                        } else {
-                            System.err.println("Error parsing class details.");
+                        try {
+                            section = Integer.parseInt(args.get(2));
+                        } catch (NumberFormatException e) {
+                            System.err.println("Invalid section number.");
+                            return false;
                         }
-                    } else if (lines.length == 0) {
-                        System.err
-                                .println("Error: No matching class found for the selected course, term, and section.");
-                    } else {
-                        System.err
-                                .println("Error: Multiple sections found for the selected course, term, and section.");
+
+                        // Build the SQL query to select the class
+                        query += "SELECT Course_ID, Course_Number, Term, Section_Number, Description\n";
+                        query += "FROM Class\n";
+                        query += "WHERE Course_Number = '" + course + "'";
+                        query += " AND Term = '" + term + "'";
+                        query += " AND Section_Number = " + section + ";";
+
+                        String result = dbc.executeSqlCommand(query);
+                        String[] lines = result.split("\n");
+
+                        if (lines.length == 1) {
+                            System.out.println("Selected class:");
+                            System.out.println(lines[0]); // Print the selected class details
+                            activeClass = lines[0]; // Set the active class
+
+                            // Extract course ID from class details
+                            String[] classDetails = lines[0].split("\t");
+                            if (classDetails.length >= 1) {
+                                String courseID = classDetails[0];
+                                activeClass_pk = Integer.parseInt(courseID); // set the primary key (for active class)
+                                                                             // to
+                                                                             // courseID
+                                System.out.println("Course ID: " + courseID);
+                            } else {
+                                System.err.println("Error parsing class details.");
+                            }
+                        } else if (lines.length == 0) {
+                            System.err
+                                    .println(
+                                            "Error: No matching class found for the selected course, term, and section.");
+                        } else {
+                            System.err
+                                    .println(
+                                            "Error: Multiple sections found for the selected course, term, and section.");
+                        }
+                    } catch (NumberFormatException e) {
+                        System.err.println("Error processing input");
                     }
                 } else {
                     System.err.println(command + " requires 1 to 3 arguments: <Course> *<Semester> *<Section>.");
+
                 }
                 break;
 
@@ -335,28 +353,30 @@ public class Main {
                 break;
 
             case "add-student":
-            if (num_args == 1 || num_args == 4) {
-                String username = args.get(0);
-        
-                // Check if the student already exists
-                query = "SELECT * FROM Student WHERE Username = '" + username + "'";
-                String studentResult = dbc.executeSqlCommand(query);
-        
-                if (!studentResult.isEmpty()) {
-                    // Student already exists, enroll in the current class
-                    enrollExistingStudent(username, dbc);
-                } else if (num_args == 4) {
-                    // Add new student and enroll in the current class
-                    String studentID = args.get(1);
-                    String lastname = args.get(2);
-                    String firstname = args.get(3);
-                    addAndEnrollNewStudent(username, studentID, lastname, firstname, dbc);
+                if (num_args == 1 || num_args == 4) {
+                    String username = args.get(0);
+
+                    // Check if the student already exists
+                    query = "SELECT * FROM Student WHERE Username = '" + username + "'";
+                    String studentResult = dbc.executeSqlCommand(query);
+
+                    if (!studentResult.isEmpty()) {
+                        // Student already exists, enroll in the current class
+                        enrollExistingStudent(username, dbc);
+                    } else if (num_args == 4) {
+                        // Add new student and enroll in the current class
+                        String studentID = args.get(1);
+                        String lastname = args.get(2);
+                        String firstname = args.get(3);
+                        addAndEnrollNewStudent(username, studentID, lastname, firstname, dbc);
+                    } else {
+                        System.err.println(
+                                "Invalid arguments. Use 'add-student <username>' or 'add-student <username> <studentid> <Last> <First>'.");
+                    }
                 } else {
-                    System.err.println("Invalid arguments. Use 'add-student <username>' or 'add-student <username> <studentid> <Last> <First>'.");
+                    System.err.println(
+                            "Invalid arguments. Use 'add-student <username>' or 'add-student <username> <studentid> <Last> <First>'.");
                 }
-            } else {
-                System.err.println("Invalid arguments. Use 'add-student <username>' or 'add-student <username> <studentid> <Last> <First>'.");
-            }
                 break;
 
             case "show-students":
@@ -472,11 +492,82 @@ public class Main {
                 }
                 break;
 
+            case "student-grades":
+                if (num_args == 1) {
+                    String username = args.get(0);
+
+                    // Get student ID
+                    query = "SELECT Student_ID FROM Student WHERE Username = '" + username + "';";
+                    String result = dbc.executeSqlCommand(query);
+                    int student_id = Integer.parseInt(result.trim());
+
+                    // Build the SQL query to fetch student grades, group by category, and calculate
+                    // subtotals
+                    query = "SELECT a.Name AS Assignment_Name, a.Points_Possible, g.Earned_Points, c.Category_Name " +
+                            "FROM Assignment a " +
+                            "JOIN Grade g ON a.Assignment_ID = g.Assignment_ID " +
+                            "JOIN Category c ON a.Category_ID = c.Category_ID " +
+                            "WHERE a.Course_ID = " + activeClass_pk + " AND g.Student_ID = " + student_id + " " +
+                            "ORDER BY c.Category_Name;";
+
+                    String resultGrades = dbc.executeSqlCommand(query);
+                    System.out.println("Student Grades for " + username
+                            + "(Assignment Name, Total Points, Earned Points, Assignment Category):");
+                    System.out.println(resultGrades);
+
+                    // Calculate subtotals for each category and overall grade in the class
+                    String subtotalQuery = "SELECT c.Category_Name, " +
+                            "SUM(a.Points_Possible) AS Total_Points_Possible, " +
+                            "SUM(g.Earned_Points) AS Total_Earned_Points, " +
+                            "ROUND((SUM(g.Earned_Points) / SUM(a.Points_Possible)) * 100, 2) AS Category_Grade " +
+                            "FROM Assignment a " +
+                            "JOIN Grade g ON a.Assignment_ID = g.Assignment_ID " +
+                            "JOIN Category c ON a.Category_ID = c.Category_ID " +
+                            "WHERE a.Course_ID = " + activeClass_pk + " AND g.Student_ID = " + student_id + " " +
+                            "GROUP BY c.Category_Name WITH ROLLUP;"; // WITH ROLLUP for subtotals
+                    String subtotalResult = dbc.executeSqlCommand(subtotalQuery);
+                    System.out.println("Subtotals and Overall Grade for " + username
+                            + "(Assignment Category, Total Points Possible, Earned Points, Grade):");
+                    System.out.println(subtotalResult);
+
+                    // Calculate rescaled category weights (summing to 100)
+                    String rescaleQuery = "SELECT c.Category_Name, " +
+                            "ROUND((SUM(a.Points_Possible) / (SELECT SUM(Points_Possible) FROM Assignment " +
+                            "WHERE Course_ID = " + activeClass_pk + ")) * 100, 2) AS Rescaled_Weight " +
+                            "FROM Assignment a " +
+                            "JOIN Category c ON a.Category_ID = c.Category_ID " +
+                            "WHERE a.Course_ID = " + activeClass_pk + " " +
+                            "GROUP BY c.Category_Name;";
+                    String rescaleResult = dbc.executeSqlCommand(rescaleQuery);
+                    System.out.println(
+                            "Rescaled Category Weights for " + username + "(Assignment Category, Rescaled Weignts):");
+                    System.out.println(rescaleResult);
+                } else {
+                    System.err.println(command + " takes one argument: <Username>.");
+                }
+
+                break;
+
             case "gradebook":
                 if (num_args == 0) {
-                    // do something here
-                } else
+                    // Build the SQL query to fetch gradebook data
+                    String gradebookQuery = "SELECT s.Username, s.Student_ID, CONCAT(s.Firstname, ' ', s.Lastname) AS Name, "
+                            +
+                            "ROUND((SUM(g.Earned_Points) / SUM(a.Points_Possible)) * 100, 2) AS Total_Grade " +
+                            "FROM Student s " +
+                            "JOIN Enrollment e ON s.Student_ID = e.Student_ID " +
+                            "JOIN Grade g ON s.Student_ID = g.Student_ID " +
+                            "JOIN Assignment a ON g.Assignment_ID = a.Assignment_ID " +
+                            "WHERE a.Course_ID = " + activeClass_pk + " " +
+                            "GROUP BY s.Student_ID;";
+
+                    // Execute the gradebook query and print the results
+                    String gradebookResult = dbc.executeSqlCommand(gradebookQuery);
+                    System.out.println("Gradebook for Current Class (Username, Student ID, Name, Total Grade):");
+                    System.out.println(gradebookResult);
+                } else {
                     System.err.println(command + " takes no arguments.");
+                }
                 break;
 
             // Print the default error
@@ -491,16 +582,19 @@ public class Main {
 
     private static void enrollExistingStudent(String username, DatabaseConnector dbc) {
         // Enroll the existing student in the current class
-        String query = "INSERT INTO Enrollment (Student_ID, Course_ID) SELECT Student_ID, " + activeClass_pk + " FROM Student WHERE Username = '" + username + "'";
+        String query = "INSERT INTO Enrollment (Student_ID, Course_ID) SELECT Student_ID, " + activeClass_pk
+                + " FROM Student WHERE Username = '" + username + "'";
         dbc.executeSqlCommand(query);
         System.out.println("Student enrolled successfully.");
     }
-    
-    private static void addAndEnrollNewStudent(String username, String studentID, String lastname, String firstname, DatabaseConnector dbc) {
+
+    private static void addAndEnrollNewStudent(String username, String studentID, String lastname, String firstname,
+            DatabaseConnector dbc) {
         // Add the new student to the Student table
-        String query = "INSERT INTO Student (Student_ID, Username, Firstname, Lastname) VALUES (" + studentID + ", '" + username + "', '" + firstname + "', '" + lastname + "')";
+        String query = "INSERT INTO Student (Student_ID, Username, Firstname, Lastname) VALUES (" + studentID + ", '"
+                + username + "', '" + firstname + "', '" + lastname + "')";
         dbc.executeSqlCommand(query);
-    
+
         // Enroll the new student in the current class
         query = "INSERT INTO Enrollment (Student_ID, Course_ID) VALUES (" + studentID + ", " + activeClass_pk + ")";
         dbc.executeSqlCommand(query);
@@ -598,9 +692,9 @@ public class Main {
             for (int i = 1; i < tokens.size(); i++) {
                 String a = tokens.get(i);
                 // string begin/end string literal quotes
-                 if (a.startsWith("\"") && a.endsWith("\"") && a.length() > 0) {
-                 a = a.substring(1, a.length() - 1);
-                 }
+                if (a.startsWith("\"") && a.endsWith("\"") && a.length() > 0) {
+                    a = a.substring(1, a.length() - 1);
+                }
                 c_args.add(a);
             }
             quit = parseCommand(tokens.get(0), c_args, dbc);
