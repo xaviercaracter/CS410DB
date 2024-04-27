@@ -1,4 +1,8 @@
-# CS410DB
+# CS410 Final Project
+
+### Xavier Caracter  (xaviercaracter@u.boisestate.edu)
+### Paul Vanderveeen   (paulvanderveen@u.boisestate.edu)
+
 
 ## Project Description
 
