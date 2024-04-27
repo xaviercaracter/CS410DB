@@ -77,6 +77,11 @@ is not explicity stated here. To see all the implemented commands, and to get st
 
 This will print a list of all commands, along with their documentation and description on how to use them.
 
+To exit the shell, simply enter:
+
+\> quit
+
+
 NOTE: On Windows, you would change ":mysql-connector-java-8.0.30.jar" to ";mysql-connector-java-8.0.30.jar".
 The Javac compiling command is the Same for Windows as it is with Unix/Linux.
 
@@ -95,11 +100,10 @@ NOTE: This connection Works on BSU's onyx cluster only! Otherwise, just set up y
 
 ## Demo Video 
 
-To see a demonstration of this program, go to the YouTube link listed below. The demo video shows examples
+To see a quick demonstration and rundown of all the database commands, go to the YouTube link listed below. The demo video shows examples
 of how to run particular commands
 
-
-
+https://www.youtube.com/watch?v=wUU-q5V-6kk
 
 
 
